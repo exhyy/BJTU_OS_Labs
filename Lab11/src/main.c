@@ -102,7 +102,6 @@ int main()
     init_deadlock_task(&deadlock_task, num_res, num_process);
     set_task_process(&deadlock_task, process);
     set_task_available(&deadlock_task, available);
-    puts("check1");
     if (check_deadlock(&deadlock_task))
         puts("发生死锁！");
     else
