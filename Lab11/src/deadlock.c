@@ -72,8 +72,13 @@ void set_task_available(DeadlockTask *deadlock_task, int *available)
 
 int check_deadlock(DeadlockTask *deadlock_task)
 {
+    fprintf(stdout, "正在检测死锁...\n");
     int *temp_set = (int *)malloc((deadlock_task->num_process + 1) * sizeof(int));
     get_set_to_solve(deadlock_task);
+    fprintf(stdout, "  SetToSolve: ");
+    for (int i = 1; i <= deadlock_task->set_to_solve[0]; i++)
+        fprintf(stdout, "%d ", deadlock_task->set_to_solve[i]);
+    fprintf(stdout, "\n");
     memcpy(deadlock_task->work, deadlock_task->available, deadlock_task->num_res * sizeof(int));
     memcpy(temp_set, deadlock_task->set_to_solve, (deadlock_task->num_process + 1) * sizeof(int));
 
@@ -99,6 +104,10 @@ int check_deadlock(DeadlockTask *deadlock_task)
                 {
                     deadlock_task->work[j] += process.allocation[j];
                 }
+                fprintf(stdout, "  进程%d已完成，可用资源数变为：", deadlock_task->set_to_solve[i]);
+                for (int j = 0; j < deadlock_task->num_res; j++)
+                    fprintf(stdout, "%d ", deadlock_task->work[j]);
+                fprintf(stdout, "\n");
                 remove_set_item(deadlock_task->set_to_solve, i);
             }
         }
