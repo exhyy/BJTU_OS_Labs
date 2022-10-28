@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "stdarg.h": "c",
+        "malloc.h": "c",
+        "deadlock.h": "c",
+        "bit": "c",
+        "*.tcc": "c",
+        "random": "c",
+        "limits": "c",
+        "memory": "c",
+        "streambuf": "c",
+        "system_error": "c",
+        "cmath": "c",
+        "functional": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "typeinfo": "c",
+        "algorithm": "c",
+        "new": "c"
+    }
+}
