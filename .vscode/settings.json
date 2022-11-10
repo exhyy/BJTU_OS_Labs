@@ -16,6 +16,7 @@
         "type_traits": "c",
         "typeinfo": "c",
         "algorithm": "c",
-        "new": "c"
+        "new": "c",
+        "freetable.h": "c"
     }
 }
