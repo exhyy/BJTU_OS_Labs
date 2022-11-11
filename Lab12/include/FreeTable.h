@@ -21,6 +21,8 @@ typedef struct FreeTable
 
 void init_free_table(FreeTable *free_table, int size);
 void destory_free_table(FreeTable *free_table);
-void add_free_table_item(FreeTable *free_table, FreeTableItem free_table_item, int index);
+void set_free_table_item(FreeTable *free_table, FreeTableItem free_table_item, int index, int new_item);
+void insert_free_table_item(FreeTable *free_table, FreeTableItem free_table_item, int index);
+void remove_free_table_item(FreeTable *free_table, int index);
 
 #endif
