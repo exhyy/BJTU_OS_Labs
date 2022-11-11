@@ -48,4 +48,5 @@ void remove_free_table_item(FreeTable *free_table, int index)
     {
         free_table->data[i] = free_table->data[i + 1];
     }
+    free_table->length--;
 }
