@@ -34,11 +34,11 @@ void insert_free_table_item(FreeTable *free_table, FreeTableItem free_table_item
         free(old_data);
     }
 
-    for (int i = free_table->length - 1; i >= index; i--)
+    for (int i = free_table->length - 1; i > index; i--)
     {
         free_table->data[i + 1] = free_table->data[i];
     }
-    free_table->data[index] = free_table_item;
+    free_table->data[index + 1] = free_table_item;
     free_table->length++;
 }
 
