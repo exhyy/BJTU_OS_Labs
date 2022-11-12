@@ -38,7 +38,6 @@ typedef struct Process
 typedef struct MemoryAllocationSimulator
 {
     Process process[NUM_PROCESS_MAX];
-    int num_process;
     int time;
     int algorithm;
     double memory_usage;

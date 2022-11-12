@@ -43,11 +43,13 @@ int allocate_memory(Memory *memory, int size, int algorithm)
     }
     else if (algorithm == NEXT_FIT)
     {
-        static int current = -1;
+        static int current = 0;
+        if (current >= memory->free_table.length || memory->compacted == 1)
+            current = 0; // 发生紧凑，则重置current
         int i = current + 1;
         while (i != current)
         {
-            if (memory->free_table.data[i].status == PARTITION_FREE)
+            if (memory->free_table.data[i].status == PARTITION_FREE && memory->free_table.data[i].size >= size)
             {
                 free_partition_index = i;
                 current = i;
@@ -94,6 +96,7 @@ int allocate_memory(Memory *memory, int size, int algorithm)
         {
             // TODO: 进行紧凑，然后重新尝试分配内存（可以尝试递归？）
             compact_memory(memory);
+            memory->compacted = 1;
             int partition_index = allocate_memory(memory, size, algorithm);
             memory->compacted = 1;
             return partition_index;
@@ -192,7 +195,6 @@ void recycle_memory(Memory *memory, int partition_id)
 void init_simulator(MemoryAllocationSimulator *simulator, int algorithm, int unit_size, int system_size, int user_size)
 {
     memset(simulator->process, 0, sizeof(simulator->process));
-    simulator->num_process = 0;
     simulator->time = 0;
     simulator->algorithm = algorithm;
     simulator->memory_usage = 0;
