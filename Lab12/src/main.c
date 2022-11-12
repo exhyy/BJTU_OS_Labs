@@ -14,7 +14,7 @@ int main()
     int unit_size = 1024;
     int system_size = 128 * 1024 * 1024;
     int user_size = 384 * 1024 * 1024;
-    int max_events = 1000;
+    int max_events = 100;
     int algorithm;
     fprintf(stdout, "请选择动态分区分配算法：\n");
     fprintf(stdout, "  1. 首次适应（First Fit）算法\n");
