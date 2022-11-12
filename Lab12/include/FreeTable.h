@@ -7,9 +7,9 @@
 
 typedef struct FreeTableItem
 {
-    int size;
-    int address;
-    int status;
+    int size;    // 分区大小
+    int address; // 分区起始地址
+    int status;  // 分区状态：是否被占用
 } FreeTableItem;
 
 typedef struct FreeTable
