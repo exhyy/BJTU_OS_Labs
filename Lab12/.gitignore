@@ -1,5 +1,6 @@
 # This project
 .vscode
+output.txt
 
 # Prerequisites
 *.d

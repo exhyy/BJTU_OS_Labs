@@ -1,7 +1,15 @@
 #include "MemoryAllocation.h"
+#include <stdlib.h>
+#include <stdio.h>
+
+#define RANDOM_SEED 114514
 
 int main()
 {
+    printf("20281109-HuangYuyao-OS_Lab12\n");
+
+    srand(RANDOM_SEED);
+
     MemoryAllocationSimulator simulator;
     int unit_size = 1024;
     int system_size = 128 * 1024 * 1024;

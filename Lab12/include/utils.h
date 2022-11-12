@@ -17,7 +17,7 @@ typedef struct Queue
 void init_queue(Queue *queue);
 void queue_push(Queue *queue, int value);
 int queue_pop(Queue *queue);
-int queue_top(Queue *queue);
+int queue_head(Queue *queue);
 int queue_empty(Queue *queue);
 
 typedef struct Pair 

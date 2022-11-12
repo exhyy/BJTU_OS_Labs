@@ -230,7 +230,7 @@ void create_process(MemoryAllocationSimulator *simulator, int size, int duration
     if (memory_index == -1)
     {
         // 挂起进程
-        fprintf(stdout, "创建失败，进程挂起\n");
+        fprintf(stdout, "创建失败，挂起进程%d\n", index);
         simulator->process[index].status = PROCESS_SUSPENDED;
         simulator->process[index].memory_size = size;
         simulator->process[index].time = duration;
@@ -264,7 +264,7 @@ void create_process(MemoryAllocationSimulator *simulator, int size, int duration
                 simulator->process[id_pairs[i].second].memory_index = i + 1;
             }
         }
-        fprintf(stdout, "成功分配内存%.2lfKB\n", simulator->memory.free_table.data[memory_index].size / 1024.0);
+        fprintf(stdout, "成功分配内存%.2lfKB，内存分区号%d，进程号%d\n", simulator->memory.free_table.data[memory_index].size / 1024.0, memory_index, index);
     }
 }
 
@@ -281,7 +281,7 @@ int activate_process(MemoryAllocationSimulator *simulator)
     if (queue_empty(&(simulator->suspended_queue)))
         return -1;
 
-    int process_id = queue_pop(&(simulator->suspended_queue));
+    int process_id = queue_head(&(simulator->suspended_queue));
     int memory_index = allocate_memory(&(simulator->memory), simulator->process[process_id].memory_size, simulator->algorithm);
     if (memory_index == -1)
     {
@@ -311,6 +311,7 @@ int activate_process(MemoryAllocationSimulator *simulator)
             simulator->process[id_pairs[i].second].memory_index = i + 1;
         }
     }
+    queue_pop(&(simulator->suspended_queue));
     return process_id;
 }
 
@@ -329,15 +330,16 @@ void random_simulation(MemoryAllocationSimulator *simulator, int max_events)
                 simulator->process[i].time--;
                 if (simulator->process[i].time == 0)
                 {
+                    cnt_event++;
+                    fprintf(stdout, "事件%d：", cnt_event);
                     finish_process(simulator, i);
                     print_free_table(&(simulator->memory.free_table));
-                    cnt_event++;
-                    if (cnt_event > max_events)
+                    if (cnt_event >= max_events)
                         break;
                 }
             }
         }
-        if (cnt_event > max_events)
+        if (cnt_event >= max_events)
             break;
         
         int random_num = rand();
@@ -348,18 +350,22 @@ void random_simulation(MemoryAllocationSimulator *simulator, int max_events)
         if (activated_process_id != -1) // 尝试激活进程
         {
             cnt_event++;
+            fprintf(stdout, "事件%d：激活进程%d...", cnt_event, activated_process_id);
+            if (simulator->memory.compacted == 1)
+                fprintf(stdout, "完成紧凑...");
             Process process = simulator->process[activated_process_id];
-            fprintf(stdout, "激活进程%d，内存分区号%d，持续时间%d\n", activated_process_id, process.memory_index, process.time);
+            fprintf(stdout, "激活成功，内存分区号%d，持续时间%d\n", process.memory_index, process.time);
             print_free_table(&(simulator->memory.free_table));
-            if (cnt_event > max_events)
+            if (cnt_event >= max_events)
                 break;
         }
         int random_size = rand() % (1024 * 1024 * 64) + 1; // 1B~64MB
         int random_duration = rand() % 100 + 1; // 1~100
+        cnt_event++;
+        fprintf(stdout, "事件%d：", cnt_event);
         create_process(simulator, random_size, random_duration);
         print_free_table(&(simulator->memory.free_table));
-        cnt_event++;
-        if (cnt_event > max_events)
+        if (cnt_event >= max_events)
             break;
     }
 }

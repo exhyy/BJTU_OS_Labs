@@ -28,7 +28,7 @@ void queue_push(Queue *queue, int value)
 
 int queue_pop(Queue *queue)
 {
-    int head_value = queue_top(queue);
+    int head_value = queue_head(queue);
     QueueNode *old_head = queue->head;
     if (queue->head == queue->tail)
     {
@@ -41,7 +41,7 @@ int queue_pop(Queue *queue)
     return head_value;
 }
 
-int queue_top(Queue *queue)
+int queue_head(Queue *queue)
 {
     return queue->head->value;
 }
