@@ -24,5 +24,6 @@ void destory_free_table(FreeTable *free_table);
 void set_free_table_item(FreeTable *free_table, FreeTableItem free_table_item, int index, int new_item);
 void insert_free_table_item(FreeTable *free_table, FreeTableItem free_table_item, int index);
 void remove_free_table_item(FreeTable *free_table, int index);
+void print_free_table(FreeTable *free_table);
 
 #endif

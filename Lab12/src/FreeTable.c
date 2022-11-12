@@ -50,3 +50,16 @@ void remove_free_table_item(FreeTable *free_table, int index)
     }
     free_table->length--;
 }
+
+void print_free_table(FreeTable *free_table)
+{
+    fprintf(stdout, "%-8s%-12s%-16s%-8s\n", "ID", "Size(KB)", "Address", "Status");
+    for (int i = 0; i < free_table->length; i++)
+    {
+        FreeTableItem item = free_table->data[i];
+        if (item.status == PARTITION_FREE)
+            fprintf(stdout, "%-8d%-12.2f%-16p%-8s\n", i, item.size / 1024.0, (void *)(long)item.address, "FREE");
+        else
+            fprintf(stdout, "%-8d%-12.2f%-16p%-8s\n", i, item.size / 1024.0, (void *)(long)item.address, "USED");
+    }
+}

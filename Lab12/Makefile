@@ -3,7 +3,7 @@ SRC := ${wildcard src/*.c}
 OBJ := ${patsubst %.c,%.o,${SRC}}
 OBJ := ${patsubst src/%,build/%,${OBJ}}
 CC := gcc
-C_FLAGS := -Iinclude -g -Wall
+C_FLAGS := -Iinclude -g -Wall -lm
 
 all: ${OBJ}
 	${CC} $^ -o ${TARGET} ${C_FLAGS}

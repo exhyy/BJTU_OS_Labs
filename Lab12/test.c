@@ -31,5 +31,7 @@ int main()
     {
         printf("%d %d\n", id_pairs[i].first, id_pairs[i].second);
     }
+    printf("%-10p%-10d\n", (void *)123456, 999);
+    fprintf(stdout, "%-12s %-12s %-12s %-12s\n", "abc", "123", "hello", "ca");
     return 0;
 }
