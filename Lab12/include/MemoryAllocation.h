@@ -13,6 +13,7 @@ typedef struct Memory
     int system_size;
     int user_size;
     int compacted; // 用来标记是否发生了紧凑
+    int search_cnt;
     FreeTable free_table;
 } Memory;
 

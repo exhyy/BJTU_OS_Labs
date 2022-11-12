@@ -20,6 +20,7 @@ void init_memory(Memory *memory, int unit_size, int system_size, int user_size)
     memory->system_size = system_size;
     memory->user_size = user_size;
     memory->compacted = 0;
+    memory->search_cnt = 0;
     init_free_table(&(memory->free_table), 2);
     FreeTableItem system = {system_size, 0, PARTITION_USED};
     FreeTableItem user = {user_size, system_size, PARTITION_FREE};
@@ -34,6 +35,7 @@ int allocate_memory(Memory *memory, int size, int algorithm)
     {
         for (int i = 0; i < memory->free_table.length; i++)
         {
+            memory->search_cnt++;
             if (memory->free_table.data[i].status == PARTITION_FREE && memory->free_table.data[i].size >= size)
             {
                 free_partition_index = i;
@@ -49,6 +51,7 @@ int allocate_memory(Memory *memory, int size, int algorithm)
         int i = current + 1;
         while (i != current)
         {
+            memory->search_cnt++;
             if (memory->free_table.data[i].status == PARTITION_FREE && memory->free_table.data[i].size >= size)
             {
                 free_partition_index = i;
