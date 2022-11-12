@@ -17,5 +17,6 @@ int main()
     int max_events = 100;
     init_simulator(&simulator, FIRST_FIT, unit_size, system_size, user_size);
     random_simulation(&simulator, max_events);
+    fprintf(stdout, "总耗时：%d，平均内存利用率：%.2lf\%%\n", simulator.time, simulator.memory_usage * 100);
     return 0;
 }

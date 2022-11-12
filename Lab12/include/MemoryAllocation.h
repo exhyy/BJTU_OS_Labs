@@ -41,6 +41,7 @@ typedef struct MemoryAllocationSimulator
     int num_process;
     int time;
     int algorithm;
+    double memory_usage;
     Memory memory;
     Queue suspended_queue;
 } MemoryAllocationSimulator;

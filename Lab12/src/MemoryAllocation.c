@@ -195,6 +195,7 @@ void init_simulator(MemoryAllocationSimulator *simulator, int algorithm, int uni
     simulator->num_process = 0;
     simulator->time = 0;
     simulator->algorithm = algorithm;
+    simulator->memory_usage = 0;
     init_memory(&(simulator->memory), unit_size, system_size, user_size);
     init_queue(&(simulator->suspended_queue));
 }
@@ -318,10 +319,13 @@ int activate_process(MemoryAllocationSimulator *simulator)
 void random_simulation(MemoryAllocationSimulator *simulator, int max_events)
 {
     simulator->time = 0;
+    simulator->memory_usage = 0;
     int cnt_event = 0;
+    double memory_usage = 0.0;
     while (1)
     {
         simulator->time++;
+        memory_usage += get_memory_usage(&(simulator->memory.free_table));
         // 所有进程剩余时间减1，将剩余时间为0的进程结束
         for (int i = 0; i < NUM_PROCESS_MAX; i++)
         {
@@ -368,4 +372,6 @@ void random_simulation(MemoryAllocationSimulator *simulator, int max_events)
         if (cnt_event >= max_events)
             break;
     }
+    memory_usage /= simulator->time++;
+    simulator->memory_usage = memory_usage;
 }

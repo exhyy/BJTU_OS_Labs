@@ -63,3 +63,15 @@ void print_free_table(FreeTable *free_table)
             fprintf(stdout, "%-8d%-12.2f%-12d%-8s\n", i, item.size / 1024.0, item.address / 1024, "USED");
     }
 }
+
+double get_memory_usage(FreeTable *free_table)
+{
+    double used_size = 0, total_size = 0;
+    for (int i = 0; i < free_table->length; i++)
+    {
+        total_size += free_table->data[i].size;
+        if (free_table->data[i].status == PARTITION_USED)
+            used_size += free_table->data[i].size;
+    }
+    return used_size / total_size;
+}
