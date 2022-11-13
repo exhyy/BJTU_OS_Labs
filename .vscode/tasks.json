@@ -6,7 +6,7 @@
         {
             "label": "Build C",
             "type": "shell",
-            "command": "make -C ./Lab12"
+            "command": "make -C ./Lab13"
         }
     ]
 }

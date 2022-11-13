@@ -8,7 +8,7 @@
             "name": "(gdb) 启动",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/Lab12/main.out",
+            "program": "${workspaceFolder}/Lab13/main.out",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
