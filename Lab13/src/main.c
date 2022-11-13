@@ -4,13 +4,6 @@
 
 #define RANDOM_SEED 114514
 
-void test(Memory *memory)
-{
-    int a[20] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1};
-    for (int i = 0; i < 20; i++)
-        memory->working_set.access_list.page_id[i] = a[i];
-}
-
 int main()
 {
     printf("20281109-HuangYuyao-OS_Lab13\n");
@@ -39,7 +32,6 @@ int main()
     init_working_set(&working_set, working_set_length, start, speed, access_list);
     init_memory(&memory, num_pages, working_set);
     get_access_list(&memory);
-    // test(&memory);
 
     fprintf(stdout, "生成的访问序列如下（R表示读访问，W表示写访问）：\n");
     for (int i = 0; i < memory.working_set.access_list.length; i++)
