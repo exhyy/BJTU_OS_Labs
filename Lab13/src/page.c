@@ -427,8 +427,8 @@ void simple_clock(Memory *memory)
             double rate = (double)(memory->missing_cnt) / memory->access_cnt;
             fprintf(stdout, "...发生缺页中断，缺页率为%.2lf%%(%d/%d)\n", rate * 100, memory->missing_cnt, memory->access_cnt);
         }
-        fprintf(stdout, "总耗时：%lfs\n", total_time);
     }
+    fprintf(stdout, "总耗时：%lfs\n", total_time);
 }
 
 void refined_clock(Memory *memory)
