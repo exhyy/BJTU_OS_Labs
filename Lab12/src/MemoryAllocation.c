@@ -143,10 +143,10 @@ void compact_memory(Memory *memory)
     insert_free_table_item(&(memory->free_table), new_free_partition, max_partition_index);
 }
 
-void recycle_memory(Memory *memory, int partition_id)
+int recycle_memory(Memory *memory, int partition_id)
 {
     if (memory->free_table.data[partition_id].status == PARTITION_FREE)
-        return;
+        return 0;
     if (partition_id + 1 < memory->free_table.length)
     {
         if (memory->free_table.data[partition_id - 1].status == PARTITION_FREE && memory->free_table.data[partition_id + 1].status == PARTITION_USED)
@@ -155,6 +155,7 @@ void recycle_memory(Memory *memory, int partition_id)
             int new_size = memory->free_table.data[partition_id - 1].size + memory->free_table.data[partition_id].size;
             memory->free_table.data[partition_id - 1].size = new_size;
             remove_free_table_item(&(memory->free_table), partition_id);
+            return 1;
         }
         else if (memory->free_table.data[partition_id - 1].status == PARTITION_USED && memory->free_table.data[partition_id + 1].status == PARTITION_FREE)
         {
@@ -163,6 +164,7 @@ void recycle_memory(Memory *memory, int partition_id)
             memory->free_table.data[partition_id].size = new_size;
             memory->free_table.data[partition_id].status = PARTITION_FREE;
             remove_free_table_item(&(memory->free_table), partition_id + 1);
+            return 1;
         }
         else if (memory->free_table.data[partition_id - 1].status == PARTITION_FREE && memory->free_table.data[partition_id + 1].status == PARTITION_FREE)
         {
@@ -171,11 +173,13 @@ void recycle_memory(Memory *memory, int partition_id)
             memory->free_table.data[partition_id - 1].size = new_size;
             remove_free_table_item(&(memory->free_table), partition_id + 1);
             remove_free_table_item(&(memory->free_table), partition_id);
+            return 2;
         }
         else
         {
             // 不与空闲分区相邻
             memory->free_table.data[partition_id].status = PARTITION_FREE;
+            return 0;
         }
     }
     else
@@ -186,11 +190,13 @@ void recycle_memory(Memory *memory, int partition_id)
             int new_size = memory->free_table.data[partition_id - 1].size + memory->free_table.data[partition_id].size;
             memory->free_table.data[partition_id - 1].size = new_size;
             remove_free_table_item(&(memory->free_table), partition_id);
+            return 1;
         }
         else
         {
             // 不与空闲分区相邻
             memory->free_table.data[partition_id].status = PARTITION_FREE;
+            return 0;
         }
     }
 }
@@ -270,6 +276,14 @@ void create_process(MemoryAllocationSimulator *simulator, int size, int duration
                 simulator->process[id_pairs[i].second].memory_index = i + 1;
             }
         }
+        else
+        {
+            for (int i = 0; i < NUM_PROCESS_MAX; i++)
+            {
+                if (simulator->process[i].status == PROCESS_RUNNING && simulator->process[i].memory_index > memory_index)
+                    simulator->process[i].memory_index++;
+            }
+        }
         fprintf(stdout, "成功分配内存%.2lfKB，内存分区号%d，进程号%d\n", simulator->memory.free_table.data[memory_index].size / 1024.0, memory_index, index);
     }
 }
@@ -279,7 +293,15 @@ void finish_process(MemoryAllocationSimulator *simulator, int process_id)
     int memory_index = simulator->process[process_id].memory_index;
     fprintf(stdout, "回收进程%d的内存%.2lfKB\n", process_id, simulator->memory.free_table.data[memory_index].size / 1024.0);
     simulator->process[process_id].status = PROCESS_FINISHED;
-    recycle_memory(&(simulator->memory), memory_index);
+    int num_removed = recycle_memory(&(simulator->memory), memory_index);
+    if (num_removed > 0)
+    {
+        for (int i = 0; i < NUM_PROCESS_MAX; i++)
+        {
+            if (simulator->process[i].status == PROCESS_RUNNING && simulator->process[i].memory_index > memory_index)
+                simulator->process[i].memory_index -= num_removed;
+        }
+    }
 }
 
 int activate_process(MemoryAllocationSimulator *simulator)
@@ -315,6 +337,14 @@ int activate_process(MemoryAllocationSimulator *simulator)
         {
             // 0号分区是系统内存，因此从1开始
             simulator->process[id_pairs[i].second].memory_index = i + 1;
+        }
+    }
+    else
+    {
+        for (int i = 0; i < NUM_PROCESS_MAX; i++)
+        {
+            if (simulator->process[i].status == PROCESS_RUNNING && simulator->process[i].memory_index > memory_index)
+                simulator->process[i].memory_index++;
         }
     }
     queue_pop(&(simulator->suspended_queue));

@@ -19,7 +19,7 @@ typedef struct Memory
 
 void init_memory(Memory *memory, int unit_size, int system_size, int user_size);
 int allocate_memory(Memory *memory, int size, int algorithm);
-void recycle_memory(Memory *memory, int partition_id);
+int recycle_memory(Memory *memory, int partition_id);
 void compact_memory(Memory *memory);
 
 #define PROCESS_FINISHED 0
